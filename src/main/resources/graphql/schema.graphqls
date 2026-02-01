@@ -1,6 +1,13 @@
 type Query {
     getAllStudents : [Student!]!
     getStudentById (id:ID!) : Student
+    getDepartments : [Department]
+}
+
+type Department{
+    departmentId : ID!,
+    departmentName:String!,
+    Students : [Student]
 }
 
 type Mutation {
@@ -10,7 +17,9 @@ type Mutation {
 input CreateStudentRequest {
     firstName: String!
     lastName: String!
-    marks: Int
+    marks: Int,
+    departmentId : Int!
+
 }
 
 
@@ -19,4 +28,5 @@ type Student {
     firstName : String!
     lastName : String!
     marks : Int
+    department : Department
 }

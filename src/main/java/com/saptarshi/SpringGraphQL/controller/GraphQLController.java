@@ -1,7 +1,9 @@
 package com.saptarshi.SpringGraphQL.controller;
 
 import com.saptarshi.SpringGraphQL.dto.CreateStudentRequest;
+import com.saptarshi.SpringGraphQL.entity.Department;
 import com.saptarshi.SpringGraphQL.entity.Student;
+import com.saptarshi.SpringGraphQL.repository.DepartmentRepository;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -20,15 +22,16 @@ import java.util.List;
 public class GraphQLController {
 
     private final StudentRepository studentRepository;
+    private final DepartmentRepository departmentRepository;
 
-    @QueryMapping
-        public List<Student> getAllStudents() {
+    @QueryMapping()
+    public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
     @QueryMapping
     public Student getStudentById(@Argument Long id) {
-        return studentRepository.findById(id).orElseThrow(()->new RuntimeException("Student not found"));
+        return studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
     @MutationMapping
@@ -37,8 +40,14 @@ public class GraphQLController {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .marks(request.getMarks())
+                .department(departmentRepository.findById(request.getDepartmentId()).orElseThrow(()-> new RuntimeException("Department with ID : " + request.getDepartmentId() + " not found!")))
                 .build();
 
         return studentRepository.save(student);
+    }
+
+    @QueryMapping
+    public List<Department> getDepartments() {
+        return departmentRepository.findAll();
     }
 }

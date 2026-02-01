@@ -1,10 +1,10 @@
 package com.saptarshi.SpringGraphQL.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,23 +12,14 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Student {
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String firstName;
-
-    private String lastName;
-
-    private double marks;
-
-    @ManyToOne(fetch = FetchType.EAGER) // it will create the N+1 problem
-    @JoinColumn(name="department_id")
+    private Long departmentId;
+    private String departmentName;
+    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @ToString.Exclude
-    private Department department;
+    private List<Student> students;
 
     @Override
     public final boolean equals(Object o) {
@@ -37,8 +28,8 @@ public class Student {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Student student = (Student) o;
-        return getId() != null && Objects.equals(getId(), student.getId());
+        Department that = (Department) o;
+        return getDepartmentId() != null && Objects.equals(getDepartmentId(), that.getDepartmentId());
     }
 
     @Override
