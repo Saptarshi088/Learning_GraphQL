@@ -1,10 +1,12 @@
 package com.saptarshi.SpringGraphQL.controller;
 
 import com.saptarshi.SpringGraphQL.dto.CreateStudentRequest;
+import com.saptarshi.SpringGraphQL.dto.UpdateStudentRequest;
 import com.saptarshi.SpringGraphQL.entity.Department;
 import com.saptarshi.SpringGraphQL.entity.Student;
 import com.saptarshi.SpringGraphQL.repository.DepartmentRepository;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -24,7 +26,7 @@ public class GraphQLController {
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
 
-    @QueryMapping()
+    @QueryMapping() // GetMapping
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
@@ -34,7 +36,7 @@ public class GraphQLController {
         return studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    @MutationMapping
+    @MutationMapping // PostMapping
     public Student createStudent(@Argument("input") CreateStudentRequest request) {
         Student student = Student.builder()
                 .firstName(request.getFirstName())
@@ -60,4 +62,23 @@ public class GraphQLController {
         return departmentRepository.save(department);
 
     }
+
+    @MutationMapping // PutMapping
+    public Student updateStudent(@Argument(name = "input") UpdateStudentRequest request) {
+
+        Student student = studentRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        if (request.getFirstName() != null)
+            student.setFirstName(request.getFirstName());
+
+        if (request.getLastName() != null)
+            student.setLastName(request.getLastName());
+
+        if (request.getMarks() != null)
+            student.setMarks(request.getMarks());
+
+        return studentRepository.save(student);
+    }
+
 }
