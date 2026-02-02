@@ -12,7 +12,9 @@ type Department{
 
 type Mutation {
     createStudent(input: CreateStudentRequest!): Student
+    createDepartment(departmentName : String!) : Department
 }
+
 
 input CreateStudentRequest {
     firstName: String!

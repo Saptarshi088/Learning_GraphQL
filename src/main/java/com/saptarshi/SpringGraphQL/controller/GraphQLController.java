@@ -48,6 +48,16 @@ public class GraphQLController {
 
     @QueryMapping
     public List<Department> getDepartments() {
-        return departmentRepository.findAll();
+//        return departmentRepository.findAll(); // This creates N+1 problem
+        return departmentRepository.findAllDepartmentWithStudents(); // This solves the N+1 problem
+    }
+
+
+    @MutationMapping
+    public Department createDepartment(@Argument String departmentName){
+        Department department = new Department();
+        department.setDepartmentName(departmentName);
+        return departmentRepository.save(department);
+
     }
 }
