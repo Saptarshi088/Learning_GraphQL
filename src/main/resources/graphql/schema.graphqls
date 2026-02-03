@@ -8,6 +8,7 @@ type Mutation {
     createStudent(input: CreateStudentRequest!): Student
     createDepartment(departmentName : String!) : Department
     updateStudent(input: UpdateStudentRequest!) : Student
+    deleteStudent(id : ID!) : Student!
 }
 
 input UpdateStudentRequest{

@@ -8,24 +8,31 @@ import com.saptarshi.SpringGraphQL.repository.DepartmentRepository;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/graphql")
 @RequiredArgsConstructor
 @CrossOrigin
+@Slf4j
 public class GraphQLController {
+
 
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @QueryMapping() // GetMapping
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
@@ -80,5 +87,15 @@ public class GraphQLController {
 
         return studentRepository.save(student);
     }
+
+    @MutationMapping
+    public Student deleteStudent(@Argument Long id) {
+        var savedStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        studentRepository.delete(savedStudent);
+        return savedStudent;
+    }
+
+
 
 }
