@@ -13,4 +13,9 @@ public class CreateStudentRequest {
     private String lastName;
     private Double marks;
     private Long departmentId;
+    private String email;
+    private String password;
+
+    public CreateStudentRequest(String ada, String lovelace, double marks, long departmentId) {
+    }
 }

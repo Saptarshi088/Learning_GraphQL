@@ -32,6 +32,8 @@ input CreateStudentRequest {
     lastName: String!
     marks: Int,
     departmentId : Int!
+    email : String!
+    password : String!
 }
 
 
@@ -40,5 +42,7 @@ type Student {
     firstName : String!
     lastName : String!
     marks : Int
+    email : String!
+    password : String!
     department : Department
 }

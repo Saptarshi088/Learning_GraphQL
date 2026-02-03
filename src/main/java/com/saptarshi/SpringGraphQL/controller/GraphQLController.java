@@ -14,6 +14,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ public class GraphQLController {
 
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PreAuthorize("hasRole('ADMIN')")
     @QueryMapping() // GetMapping
@@ -49,6 +51,8 @@ public class GraphQLController {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .marks(request.getMarks())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .department(departmentRepository.findById(request.getDepartmentId()).orElseThrow(()-> new RuntimeException("Department with ID : " + request.getDepartmentId() + " not found!")))
                 .build();
 
