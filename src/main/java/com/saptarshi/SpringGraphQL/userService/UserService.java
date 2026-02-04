@@ -1,6 +1,7 @@
 package com.saptarshi.SpringGraphQL.userService;
 
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +16,14 @@ public class UserService implements UserDetailsService {
     private final StudentRepository  studentRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    @NonNull
+    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
         var student = studentRepository.findByEmail(email);
 
         return User.builder()
                 .username(student.getEmail())
                 .password(student.getPassword())
+                .roles(String.valueOf(student.getRole()))
                 .build();
     }
 }

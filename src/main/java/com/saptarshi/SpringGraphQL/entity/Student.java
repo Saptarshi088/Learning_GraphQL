@@ -3,9 +3,7 @@ package com.saptarshi.SpringGraphQL.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -33,4 +31,7 @@ public class Student {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
