@@ -19,7 +19,7 @@ public class JwtService {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60;
 
     public JwtService(@Value("${jwt.secret}") String secret) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(Student student) {
@@ -27,7 +27,7 @@ public class JwtService {
                 .subject(student.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(Keys.hmacShaKeyFor(student.getPassword().getBytes(StandardCharsets.UTF_8)))
+                .signWith(key)
                 .compact();
     }
 
