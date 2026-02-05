@@ -1,7 +1,10 @@
 package com.saptarshi.SpringGraphQL.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -17,7 +20,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long departmentId;
     private String departmentName;
-    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE,orphanRemoval = true)
+    @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
     private List<Student> students;
 

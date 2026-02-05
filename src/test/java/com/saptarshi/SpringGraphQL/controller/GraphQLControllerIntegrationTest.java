@@ -9,8 +9,6 @@ import org.springframework.boot.graphql.test.autoconfigure.GraphQlTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @GraphQlTest(GraphQLController.class)
 class GraphQLControllerIntegrationTest {
 

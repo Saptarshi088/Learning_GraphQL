@@ -9,6 +9,7 @@ type Mutation {
     createDepartment(departmentName : String!) : Department
     updateStudent(input: UpdateStudentRequest!) : Student
     deleteStudent(id : ID!) : Student!
+    loginAndGetJwt(input : loginRequest!) : String
 }
 
 input UpdateStudentRequest{
@@ -25,8 +26,6 @@ type Department{
 }
 
 
-
-
 input CreateStudentRequest {
     firstName: String!
     lastName: String!
@@ -36,7 +35,6 @@ input CreateStudentRequest {
     password : String!
     role : Role!
 }
-
 
 type Student {
     id : ID!
@@ -52,4 +50,9 @@ type Student {
 enum Role {
     USER,
     ADMIN
+}
+
+input loginRequest {
+    email : String!
+    password : String!
 }

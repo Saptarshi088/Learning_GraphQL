@@ -2,24 +2,25 @@ package com.saptarshi.SpringGraphQL.controller;
 
 import com.saptarshi.SpringGraphQL.dto.CreateStudentRequest;
 import com.saptarshi.SpringGraphQL.dto.UpdateStudentRequest;
+import com.saptarshi.SpringGraphQL.dto.loginRequest;
 import com.saptarshi.SpringGraphQL.entity.Department;
 import com.saptarshi.SpringGraphQL.entity.Student;
+import com.saptarshi.SpringGraphQL.jwt.JwtService;
 import com.saptarshi.SpringGraphQL.repository.DepartmentRepository;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -29,10 +30,11 @@ import java.util.List;
 @Slf4j
 public class GraphQLController {
 
-
+    private final AuthenticationManager authenticationManager;
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @QueryMapping() // GetMapping
@@ -54,7 +56,7 @@ public class GraphQLController {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .department(departmentRepository.findById(request.getDepartmentId()).orElseThrow(()-> new RuntimeException("Department with ID : " + request.getDepartmentId() + " not found!")))
+                .department(departmentRepository.findById(request.getDepartmentId()).orElseThrow(() -> new RuntimeException("Department with ID : " + request.getDepartmentId() + " not found!")))
                 .build();
 
         return studentRepository.save(student);
@@ -68,7 +70,7 @@ public class GraphQLController {
 
 
     @MutationMapping
-    public Department createDepartment(@Argument String departmentName){
+    public Department createDepartment(@Argument String departmentName) {
         Department department = new Department();
         department.setDepartmentName(departmentName);
         return departmentRepository.save(department);
@@ -101,6 +103,21 @@ public class GraphQLController {
         return savedStudent;
     }
 
+
+    // User Login and generating JWT
+    @MutationMapping
+    public String loginAndGetJwt(@Argument(name = "input") loginRequest login) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        login.getEmail(),
+                        login.getPassword()
+                )
+        );
+
+        var student = studentRepository.findByEmail(login.getEmail());
+
+        return jwtService.generateToken(student);
+    }
 
 
 }

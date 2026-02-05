@@ -24,7 +24,7 @@ public class Student {
     private double marks;
 
     @ManyToOne(fetch = FetchType.EAGER) // it will create the N+1 problem
-    @JoinColumn(name="department_id")
+    @JoinColumn(name = "department_id")
     @ToString.Exclude
     private Department department;
 
