@@ -1,5 +1,6 @@
 package com.saptarshi.SpringGraphQL.controller;
 
+import com.saptarshi.SpringGraphQL.dto.StudentResponseForRest;
 import com.saptarshi.SpringGraphQL.entity.Student;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class HelloControllerTest {
         List<Student> students = List.of(new Student());
         when(studentRepository.findAll()).thenReturn(students);
 
-        List<Student> result = controller.getAllStudents();
+        List<StudentResponseForRest> result = controller.getAllStudents();
 
         assertSame(students, result);
         verify(studentRepository).findAll();

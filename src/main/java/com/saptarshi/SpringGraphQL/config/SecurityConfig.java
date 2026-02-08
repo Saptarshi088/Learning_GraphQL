@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/graphiql",
                                 "/graphiql/**"
                         ).permitAll()
+                        .requestMatchers("/hello/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
