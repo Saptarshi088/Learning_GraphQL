@@ -8,6 +8,7 @@ import com.saptarshi.SpringGraphQL.entity.Student;
 import com.saptarshi.SpringGraphQL.jwt.JwtService;
 import com.saptarshi.SpringGraphQL.repository.DepartmentRepository;
 import com.saptarshi.SpringGraphQL.repository.StudentRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -48,7 +49,7 @@ public class GraphQLController {
     }
 
     @MutationMapping // PostMapping
-    public Student createStudent(@Argument("input") CreateStudentRequest request) {
+    public Student createStudent(@Argument("input") @Valid CreateStudentRequest request) {
         Student student = Student.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
